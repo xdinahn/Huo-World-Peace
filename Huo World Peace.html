@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eternal Flame | A Wish for World Peace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --fire-red: #800000;
+            --fire-orange: #ff4500;
+            --fire-yellow: #ff8c00;
+            --fire-gold: #ffd700;
+            --dark-bg: #1a0505;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--dark-bg);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Animated Fire Gradient Background */
+        .fire-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(26,5,5,1) 0%, rgba(74,14,14,1) 100%);
+            z-index: -2;
+        }
+
+        .glow-overlay {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 50vh;
+            background: radial-gradient(circle at 50% 100%, rgba(255, 69, 0, 0.2), transparent 70%);
+            z-index: -1;
+        }
+
+        /* Particle System Container */
+        #embers-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Content Styling */
+        .container {
+            max-width: 800px;
+            text-align: center;
+            padding: 100px 20px;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            letter-spacing: 5px;
+            background: linear-gradient(to bottom, var(--fire-gold), var(--fire-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--fire-gold);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 50px;
+            opacity: 0.8;
+        }
+
+        /* The Flame */
+        .flame-wrapper {
+            position: relative;
+            width: 100px;
+            height: 150px;
+            margin: 0 auto 60px;
+            filter: blur(1px);
+        }
+
+        .flame {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: var(--fire-gold);
+            border-radius: 50% 50% 20% 50%;
+            transform: translateX(-50%) rotate(-45deg);
+            box-shadow: 
+                0 0 20px var(--fire-orange),
+                0 0 40px var(--fire-red),
+                0 0 60px var(--fire-red);
+            animation: flicker 0.5s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) rotate(-45deg) scale(1); opacity: 0.9; }
+            100% { transform: translateX(-50%) rotate(-42deg) scale(1.1); opacity: 1; }
+        }
+
+        .message-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            backdrop-filter: blur(10px);
+            margin-bottom: 40px;
+        }
+
+        p {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #f0f0f0;
+        }
+
+        .quote {
+            font-style: italic;
+            color: var(--fire-gold);
+            margin-top: 30px;
+            font-size: 1.3rem;
+        }
+
+        /* Button Styling */
+        .btn {
+            background: transparent;
+            border: 2px solid var(--fire-gold);
+            color: var(--fire-gold);
+            padding: 15px 40px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            border-radius: 50px;
+        }
+
+        .btn:hover {
+            background: var(--fire-gold);
+            color: var(--dark-bg);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 40px;
+            font-size: 0.8rem;
+            opacity: 0.6;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.2rem; }
+            .message-box { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fire-bg"></div>
+    <div class="glow-overlay"></div>
+    <canvas id="embers-canvas"></canvas>
+
+    <div class="container">
+        <header>
+            <h1>WORLD PEACE</h1>
+            <div class="subtitle">The Eternal Flame of Hope</div>
+        </header>
+
+        <div class="flame-wrapper">
+            <div class="flame"></div>
+        </div>
+
+        <main class="message-box">
+            <p>
+                In a world often divided by shadows, let us be the light. 
+                Fire can destroy, but it can also warm the soul, guide the lost, and unite us around a common hearth. 
+                May the warmth of compassion extinguish the coldness of conflict.
+            </p>
+            <div class="quote" id="quote-display">
+                "Peace begins with a smile."
+            </div>
+            <button class="btn" onclick="newQuote()">Ignite More Hope</button>
+        </main>
+
+        <section>
+            <p style="opacity: 0.8;">May every spark of kindness today become a bonfire of peace tomorrow.</p>
+        </section>
+    </div>
+
+    <footer>
+        &copy; 2023 UNITED FOR PEACE • RADIATE LOVE
+    </footer>
+
+    <script>
+        // Particle System for Embers
+        const canvas = document.getElementById('embers-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 10;
+                this.size = Math.random() * 3 + 1;
+                this.speedY = Math.random() * 1.5 + 0.5;
+                this.speedX = Math.random() * 2 - 1;
+                this.opacity = Math.random() * 0.5 + 0.5;
+                this.color = `rgba(255, ${Math.floor(Math.random() * 150 + 50)}, 0, ${this.opacity})`;
+            }
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                this.opacity -= 0.003;
+                if (this.opacity <= 0 || this.y < -10) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        // Quote Generator
+        const quotes = [
+            "\"Peace begins with a smile.\" — Mother Teresa",
+            "\"When the power of love overcomes the love of power, the world will know peace.\" — Jimi Hendrix",
+            "\"Peace is not merely a distant goal, but a means by which we arrive at that goal.\" — Martin Luther King Jr.",
+            "\"Imagine all the people living life in peace. You may say I'm a dreamer, but I'm not the only one.\" — John Lennon",
+            "\"Darkness cannot drive out darkness; only light can do that.\" — Martin Luther King Jr.",
+            "\"Peace is its own reward.\" — Mahatma Gandhi",
+            "\"Better than a thousand hollow words, is one word that brings peace.\" — Buddha"
+        ];
+
+        function newQuote() {
+            const display = document.getElementById('quote-display');
+            display.style.opacity = 0;
+            setTimeout(() => {
+                const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+                display.innerText = randomQuote;
+                display.style.opacity = 1;
+            }, 300);
+        }
+    </script>
+</body>
+</html>
